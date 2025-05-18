@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": false,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.eol": "\n",
+  "editor.defaultFormatter": null,
+  "[typescript]": {
+    "editor.defaultFormatter": null,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": "never"
+    }
+  },
+  "prettier.bracketSpacing": false
+}
