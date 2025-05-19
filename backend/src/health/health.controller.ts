@@ -5,6 +5,7 @@ import {
   HealthCheckService,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
+import { RedisHealthIndicator } from './redis.health';
 
 @ApiTags('health')
 @Controller('health')
@@ -12,7 +13,8 @@ export class HealthController {
   constructor(
     private health: HealthCheckService,
     private db: TypeOrmHealthIndicator,
-  ) {}
+    private redis: RedisHealthIndicator,
+  ) { }
 
   @Get()
   @HealthCheck()
@@ -21,8 +23,8 @@ export class HealthController {
   @ApiResponse({ status: 503, description: 'Application is unhealthy' })
   check() {
     return this.health.check([
-      () => this.db.pingCheck('database', { timeout: 500 }), // Increased timeout to 3 seconds
-      // You can add other health indicators here, e.g., for Redis, external APIs, etc.
+      () => this.db.pingCheck('database', { timeout: 500 }),
+      () => this.redis.check('redis'),
     ]);
   }
 } 
