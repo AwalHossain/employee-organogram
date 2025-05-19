@@ -1,0 +1,18 @@
+{
+  "name": "employee-organogram-api-load-testing",
+  "version": "1.0.0",
+  "description": "Load testing tools for Employee Organogram API",
+  "main": "index.js",
+  "scripts": {
+    "test": "artillery run load-test.yml",
+    "monitor": "node simple-monitor.js",
+    "report": "node generate-report.js"
+  },
+  "dependencies": {
+    "artillery": "^2.0.0",
+    "artillery-plugin-publish-metrics": "^2.0.0",
+    "artillery-plugin-metrics-by-endpoint": "^1.0.0",
+    "artillery-plugin-expect": "^2.0.0",
+    "artillery-plugin-apdex": "^1.0.0"
+  }
+}
