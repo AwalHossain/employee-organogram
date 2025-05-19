@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -40,6 +41,7 @@ export class EmployeeEntity {
   subordinates: EmployeeEntity[];
 
   @Column({ name: 'manager_id', nullable: true })
+  @Index()
   managerId: number;
 
   @Column({ default: true })
