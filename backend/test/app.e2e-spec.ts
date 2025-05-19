@@ -1,19 +1,27 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
-import { App } from 'supertest/types';
+import { Test, TestingModule } from '@nestjs/testing';
+import request from 'supertest';
+import { RedisService } from '../src/redis/redis.service';
 import { AppModule } from './../src/app.module';
+import { RedisServiceMock } from './mocks/redis.mock';
 
 describe('AppController (e2e)', () => {
-  let app: INestApplication<App>;
+  let app: INestApplication;
 
   beforeEach(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    })
+      .overrideProvider(RedisService)
+      .useClass(RedisServiceMock)
+      .compile();
 
     app = moduleFixture.createNestApplication();
     await app.init();
+  });
+
+  afterEach(async () => {
+    await app.close();
   });
 
   it('/ (GET)', () => {
