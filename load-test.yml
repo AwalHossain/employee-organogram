@@ -1,0 +1,70 @@
+config:
+  target: "http://localhost:8000"
+  phases:
+    - duration: 60
+      arrivalRate: 2
+      rampTo: 10
+      name: "Light load test"
+    - duration: 120
+      arrivalRate: 10
+      rampTo: 50
+      name: "Medium load test"
+    - duration: 180
+      arrivalRate: 50
+      rampTo: 100
+      name: "Heavy load test"
+  defaults:
+    headers:
+      Authorization: "Bearer JWT_TOKEN" # Replace with a valid JWT token
+  plugins:
+    metrics-by-endpoint: {}
+    expect: {}
+    apdex: {}
+  processor: "./load-test-functions.js"
+
+# Artillery's output options
+output:
+  - type: "json"
+    path: "./logs/artillery-results.json"
+  - type: "csv"
+    path: "./logs/artillery-metrics.csv"
+  - type: "text"
+    path: "./logs/artillery-summary.txt"
+
+scenarios:
+  - name: "Fetch employees"
+    flow:
+      - function: "randomEmployeeId"
+      - get:
+          name: "Get all employees"
+          url: "/api/v1/employees"
+          expect:
+            - statusCode: 200
+          afterResponse: ["logResponseTime", "trackErrors", "trackProgress"]
+      - get:
+          name: "Get employee by ID"
+          url: "/api/v1/employees/{{ employeeId }}"
+          expect:
+            - statusCode: 200
+          afterResponse: ["logResponseTime", "trackErrors", "trackProgress"]
+      - get:
+          name: "Get employee subordinates"
+          url: "/api/v1/employees/{{ employeeId }}/subordinates"
+          expect:
+            - statusCode: 200
+          afterResponse: ["logResponseTime", "trackErrors", "trackProgress"]
+
+  - name: "Cache test"
+    flow:
+      - get:
+          name: "Employee cache test"
+          url: "/api/v1/employees/cache-test"
+          expect:
+            - statusCode: 200
+          afterResponse:
+            [
+              "logResponseTime",
+              "trackErrors",
+              "trackCachePerformance",
+              "trackProgress",
+            ]
