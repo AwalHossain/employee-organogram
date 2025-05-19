@@ -2,39 +2,6 @@
 
 A battle-tested, performance-focused RESTful API designed to manage organizational structures and employee hierarchies with ease. From development to deployment, everything in this system is engineered to scale effortlessly from a few hundred to **5000+ concurrent users** — and beyond.
 
----
-
-This will:
-
-- Build the API container
-- Start PostgreSQL and Redis containers
-- Connect all services with proper networking
-- Initialize the database schema
-- Start the API on port 8000
-
-3. **Check the application status**
-
-```bash
-# Check container status
-docker compose ps
-
-# View logs
-docker compose logs -f api
-```
-
-4. **Access the API**
-
-The API will be available at http://localhost:8000
-
-5. **Shut down**
-
-```bash
-docker compose down  # Keep data volumes
-docker compose down -v  # Remove data volumes for a clean start
-```
-
----
-
 ## ✅ Core Requirements Implementation
 
 1. **JWT Authentication**
@@ -74,10 +41,6 @@ docker compose down -v  # Remove data volumes for a clean start
 
 ## ✨ The Journey: From Prototype to a Planet-Scale API
 
-\[Load Balancer] → \[Node.js App ] → \[PostgreSQL + Redis]
-
----
-
 ## How Did I Handle Concurrency?
 
 Concurrency starts at the core — the **Node.js event loop**. But a single thread can only go so far. To maximize resource utilization on each machine:
@@ -97,6 +60,10 @@ Concurrency starts at the core — the **Node.js event loop**. But a single thre
 
 As I have a **lower-spec** machine, I tested this locally on a single-instance server with 8 workers with Redis cache, and it served \~200 concurrent users with sub-max 302ms latency. Here is proof:
 
+https://app.artillery.io/share/sh_4869e4d0c5677446629d10279c46ecb0ff5514a47dae962a3aceaaba54d7f75c
+
+![image](https://github.com/user-attachments/assets/d7d58c93-a8e6-42e7-ba83-a308e672d414)
+
 ---
 
 ## How Did I Use Logging and Monitoring?
@@ -113,6 +80,8 @@ Logs are useless unless they're structured, searchable, and contextual.
 ## Container Orchestration (1500-5000+ users) - I'll Use Kubernetes
 
 \[Ingress Controller] → \[K8s Pods (3-20 replicas)] → \[Redis Cluster + PostgreSQL Primary/Replica]
+![image](https://github.com/user-attachments/assets/cd759237-ffbd-40ee-acb8-39afcc014306)
+
 
 When the need arose to handle **1500**-**5000** concurrent users, the local PM2 setup wasn't enough.
 
@@ -352,3 +321,34 @@ cd employee-organogram-api
 ```bash
 docker compose up -d
 ```
+
+This will:
+
+- Build the API container
+- Start PostgreSQL and Redis containers
+- Connect all services with proper networking
+- Initialize the database schema
+- Start the API on port 8000
+
+3. **Check the application status**
+
+```bash
+# Check container status
+docker compose ps
+
+# View logs
+docker compose logs -f api
+```
+
+4. **Access the API**
+
+The API will be available at http://localhost:8000
+
+5. **Shut down**
+
+```bash
+docker compose down  # Keep data volumes
+docker compose down -v  # Remove data volumes for a clean start
+```
+
+---
